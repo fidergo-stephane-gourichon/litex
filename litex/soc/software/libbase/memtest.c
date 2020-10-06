@@ -20,12 +20,14 @@
 
 #ifndef MEMTEST_BUS_SIZE
 #define MEMTEST_BUS_SIZE (512)
+#warning MEMTEST_BUS_SIZE undefined, using default value
 #endif
 
 #define MEMTEST_DATA_RANDOM 1
 
 #ifndef MEMTEST_ADDR_SIZE
 #define MEMTEST_ADDR_SIZE (32*1024)
+#warning MEMTEST_ADDR_SIZE undefined, using default value
 #endif
 #define MEMTEST_ADDR_RANDOM 0
 
