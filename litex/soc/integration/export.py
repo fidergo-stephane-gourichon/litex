@@ -228,17 +228,18 @@ def get_csr_header(regions, constants, csr_base=None, with_access_functions=True
                         r += "#define CSR_"+name.upper()+"_"+csr.name.upper()+"_"+field.name.upper()+"_OFFSET "+offset+"\n"
                         r += "#define CSR_"+name.upper()+"_"+csr.name.upper()+"_"+field.name.upper()+"_SIZE "+size+"\n"
                         if with_access_functions:
-                            r += "static inline uint32_t "+name.upper()+"_"+csr.name.lower()+"_"+field.name.lower()+"_extract(uint32_t oldword) {\n"
+                            r += "static inline uint32_t "+name+"_"+csr.name+"_"+field.name+"_extract(uint32_t oldword) {\n"
                             r += "\tuint32_t mask = ((1 << "+size+")-1);\n"
                             r += "\treturn ( (oldword >> "+offset+") & mask );\n}\n"
-                            r += "static inline uint32_t "+name.upper()+"_"+csr.name.lower()+"_"+field.name.lower()+"_inject(uint32_t oldword, uint32_t plain_value) {\n"
+                            r += "static inline uint32_t "+name+"_"+csr.name+"_"+field.name+"_inject(uint32_t oldword, uint32_t plain_value) {\n"
                             r += "\tuint32_t mask = ((1 << "+size+")-1);\n"
                             r += "\treturn (oldword & (~(mask << "+offset+"))) | (mask & plain_value)<< "+offset+" ;\n}\n"
-                            r += "static inline void "+name.upper()+"_"+csr.name.lower()+"_"+field.name.lower()+"_write(uint32_t plain_value) {\n"
-                            r += "\tuint32_t oldword = "+name.upper()+"_"+csr.name.lower()+"_read();\n"
-                            r += "\tuint32_t newword = "+name.upper()+"_"+csr.name.lower()+"_"+field.name.lower()+"_inject(oldword, plain_value);\n"
-                            r += "\t"+name.upper()+"_"+csr.name.lower()+"_write(newword);\n"
-                            r += "\}\n"
+                            if (not isinstance(csr, CSRStatus)):
+                                r += "static inline void "+name+"_"+csr.name+"_"+field.name+"_write(uint32_t plain_value) {\n"
+                                r += "\tuint32_t oldword = "+name+"_"+csr.name+"_read();\n"
+                                r += "\tuint32_t newword = "+name+"_"+csr.name+"_"+field.name+"_inject(oldword, plain_value);\n"
+                                r += "\t"+name+"_"+csr.name+"_write(newword);\n"
+                                r += "}\n"
 
     r += "\n#endif\n"
     return r
